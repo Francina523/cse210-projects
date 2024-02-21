@@ -1,14 +1,17 @@
-public class EternalGoal : Goal
+class EternalGoal : Goal
 {
-    public EternalGoal(string name, int points) : base(name, points) { }
-
-    public override int Complete()
+     public EternalGoal() { } // Parameterless constructor required for deserialization
+    public EternalGoal(string name, string description, int points) : base(name, description, points)
     {
-        return base.Complete();
     }
 
-    public override void DisplayProgress()
+    public override void RecordEvent()
     {
-        Console.WriteLine($"[ ] {name}");
+        // Add points to the player's score
+    }
+
+    public override bool IsComplete()
+    {
+        return false; // Eternal goals are never complete
     }
 }

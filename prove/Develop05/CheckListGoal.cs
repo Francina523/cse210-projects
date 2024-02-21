@@ -1,27 +1,33 @@
- public class ChecklistGoal : Goal
+ class ChecklistGoal : Goal
 {
-    private int targetTimes;
-    private int completedTimes;
-    private int bonusPoints;
+    public ChecklistGoal() { } // Parameterless constructor required for deserialization
+    private int _amountCompleted;
+    private int _target;
+    private int _bonus;
 
-    public ChecklistGoal(string name, int points, int targetTimes, int bonusPoints) : base(name, points)
+    public ChecklistGoal(string name, string description, int points, int target, int bonus) : base(name, description, points)
     {
-        this.targetTimes = targetTimes;
-        this.bonusPoints = bonusPoints;
+        _amountCompleted = 0;
+        _target = target;
+        _bonus = bonus;
     }
 
-    public override int Complete()
+    public override void RecordEvent()
     {
-        completedTimes++;
-        if (completedTimes >= targetTimes)
+        _amountCompleted++;
+        // Add points to the player's score
+        if (_amountCompleted == _target)
         {
-            return base.Complete() + bonusPoints;
+            // Add bonus points to the player's score
         }
-        return base.Complete();
+    }
+    public override bool IsComplete()
+    {
+        return _amountCompleted == _target;
     }
 
-    public override void DisplayProgress()
+    public override string GetDetailsString()
     {
-        Console.WriteLine($"[ ] {name} (Completed {completedTimes}/{targetTimes} times)");
+        return $"{_shortName}: {_description} - {_points} points, Completed {_amountCompleted}/{_target} times";
     }
 }

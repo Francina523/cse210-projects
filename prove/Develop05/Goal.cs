@@ -1,21 +1,49 @@
- public abstract class Goal
+ class Goal
 {
-    protected string name;
-    protected int points;
-    protected bool completed;
+    protected string _shortName;
+    protected string _description;
+    protected int _points;
 
-    public Goal(string name, int points)
+    public Goal() { } // Parameterless constructor required for deserialization
+
+    public Goal(string name, string description, int points)
     {
-        this.name = name;
-        this.points = points;
-        completed = false;
+        _shortName = name;
+        _description = description;
+        _points = points;
     }
 
-    public virtual int Complete()
+    public string ShortName
     {
-        completed = true;
-        return points;
+        get { return _shortName; }
+        set { _shortName = value; }
     }
 
-    public abstract void DisplayProgress();
+    public int Points
+    {
+        get { return _points; }
+        set { _points = value; }
+    }
+
+
+    public virtual void RecordEvent()
+    {
+        // Record event logic here
+    }
+
+    public virtual bool IsComplete()
+    {
+        // Completion logic here
+        return false;
+    }
+
+    public virtual string GetDetailsString()
+    {
+        return $"{_shortName}: {_description} - {_points} points";
+    }
+
+    public virtual string GetStringRepresentation()
+    {
+        return $"{_shortName} - {_points} points";
+    }
 }

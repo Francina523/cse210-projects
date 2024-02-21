@@ -1,62 +1,78 @@
-using Newtonsoft.Json;
-public class GoalManager
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
+class GoalManager
 {
-    private List<Goal> goals;
-    private int score;
+    private List<Goal> goals = new List<Goal>();
+    private int _score;
 
     public GoalManager()
     {
-        goals = new List<Goal>();
-        score = 0;
+        _score = 0;
     }
 
-    public void AddGoal(Goal goal)
+    public void Start()
+    {
+        // Start logic
+    }
+
+    public void DisplayPlayerInfo()
+    {
+        // Display player info
+    }
+
+    public void ListGoalNames()
+    {
+    foreach (var goal in goals)
+    {
+        Console.WriteLine(goal.ShortName); // Access _shortName through the property
+    }
+    }
+    public void RecordEvent(string goalName)
+    {
+    foreach (var goal in goals)
+    {
+        if (goal.ShortName == goalName) // Assuming ShortName property is added as well
+        {
+            goal.RecordEvent();
+            _score += goal.Points; // Access _points through the property
+        }
+    }
+    }
+    public void ListGoalDetails()
+    {
+        foreach (var goal in goals)
+        {
+            Console.WriteLine(goal.GetDetailsString());
+        }
+    }
+
+    public void CreateGoal(Goal goal)
     {
         goals.Add(goal);
     }
 
-    public void RecordEvent(int goalIndex)
+    public void SaveGoals(string fileName)
     {
-        if (goalIndex >= 0 && goalIndex < goals.Count)
-        {
-            score += goals[goalIndex].Complete();
-            Console.WriteLine($"Congratulations! You completed the goal: {goals[goalIndex]}");
-        }
-        else
-        {
-            Console.WriteLine("Invalid goal index.");
-        }
+        // Serialize goals to JSON
+        string jsonString = JsonSerializer.Serialize(goals);
+
+        // Write JSON to file
+        File.WriteAllText(fileName, jsonString);
     }
 
-    public void DisplayGoals()
+    public void LoadGoals(string fileName)
     {
-        Console.WriteLine("Your Goals:");
-        foreach (var goal in goals)
-        {
-            goal.DisplayProgress();
-        }
+        // Read JSON from file
+        string jsonString = File.ReadAllText(fileName);
+
+        // Deserialize JSON to List<Goal>
+        goals = JsonSerializer.Deserialize<List<Goal>>(jsonString);
     }
 
     public void DisplayScore()
     {
-        Console.WriteLine($"Your Score: {score}");
-    }
-
-    public void SaveProgress(string fileName)
-    {
-        using (StreamWriter file = File.CreateText(fileName))
-        {
-            JsonSerializer serializer = new JsonSerializer();
-            serializer.Serialize(file, goals);
-        }
-    }
-
-    public void LoadProgress(string fileName)
-    {
-        using (StreamReader file = File.OpenText(fileName))
-        {
-            JsonSerializer serializer = new JsonSerializer();
-            goals = (List<Goal>)serializer.Deserialize(file, typeof(List<Goal>));
-        }
+        Console.WriteLine($"Current Score: {_score}");
     }
 }
